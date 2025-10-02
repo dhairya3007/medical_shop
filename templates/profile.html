@@ -5,30 +5,34 @@
     .profile-container {
         max-width: 1000px;
         margin: 0 auto;
+        padding: 1rem;
     }
 
     .profile-header {
         background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
         color: white;
-        padding: 2rem;
+        padding: 2rem 1rem;
         border-radius: 12px;
         margin-bottom: 2rem;
         text-align: center;
     }
 
-    .profile-info {
+    .profile-info,
+    .orders-section {
         background: white;
-        padding: 2rem;
+        padding: 2rem 1rem;
         border-radius: 12px;
         box-shadow: var(--shadow-sm);
         margin-bottom: 2rem;
     }
 
-    .profile-info h3 {
+    .profile-info h3,
+    .orders-section h3 {
         color: var(--dark-color);
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
         border-bottom: 2px solid var(--border-color);
+        font-size: 1.25rem;
     }
 
     .info-row {
@@ -36,6 +40,7 @@
         justify-content: space-between;
         padding: 0.75rem 0;
         border-bottom: 1px solid var(--border-color);
+        flex-wrap: wrap;
     }
 
     .info-row:last-child {
@@ -45,30 +50,29 @@
     .info-label {
         font-weight: 600;
         color: var(--dark-color);
+        min-width: 120px;
     }
 
     .info-value {
         color: var(--text-muted);
-    }
-
-    .orders-section {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: var(--shadow-sm);
+        flex: 1;
+        word-break: break-word;
     }
 
     .orders-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 1rem;
+        overflow-x: auto;
+        display: block;
     }
 
     .orders-table th,
     .orders-table td {
-        padding: 1rem;
+        padding: 0.75rem 0.5rem;
         text-align: left;
         border-bottom: 1px solid var(--border-color);
+        white-space: nowrap;
     }
 
     .orders-table th {
@@ -83,12 +87,18 @@
 
     .no-orders {
         text-align: center;
-        padding: 3rem;
+        padding: 3rem 1rem;
         color: var(--text-muted);
     }
 
     .no-orders h4 {
         margin-bottom: 1rem;
+        font-size: 1.25rem;
+    }
+
+    .btn {
+        padding: 0.5rem 1.25rem;
+        font-size: 0.9rem;
     }
 
     @media (max-width: 768px) {
@@ -96,9 +106,38 @@
             flex-direction: column;
             gap: 0.25rem;
         }
-        
+
+        .profile-header h2 {
+            font-size: 1.5rem;
+        }
+
+        .orders-table th,
+        .orders-table td {
+            padding: 0.5rem;
+        }
+
+        .orders-section h3,
+        .profile-info h3 {
+            font-size: 1.1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .profile-container {
+            padding: 0.5rem;
+        }
+
+        .profile-header {
+            padding: 1.5rem 0.5rem;
+        }
+
         .orders-table {
-            font-size: 0.875rem;
+            font-size: 0.8rem;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
         }
     }
 </style>
@@ -107,7 +146,7 @@
     <div class="profile-header">
         <h2><i class="fas fa-user-circle me-2"></i>User Profile</h2>
     </div>
-    
+
     <div class="profile-info">
         <h3>Personal Information</h3>
         <div class="info-row">
@@ -126,35 +165,36 @@
 
     <div class="orders-section">
         <h3><i class="fas fa-shopping-bag me-2"></i>Order History</h3>
-        
+
         {% if orders %}
-            <table class="orders-table">
-                <thead>
-                    <tr>
-                        <th>Order #</th>
-                        <th>Date</th>
-                        <th>Items</th>
-                        <th>Total</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for order in orders %}
-                    <tr>
-                        <td>#{{ order.id }}</td>
-                        <td>{{ order.order_date|date:"M d, Y" }}</td>
-                        <td>
-                            {% for item in order.items.all %}
-                                {{ item.medicine.name }} (x{{ item.quantity }})
-                                {% if not forloop.last %}<br>{% endif %}
-                            {% endfor %}
-                        </td>
-                        <td>₹{{ order.final_amount }}</td>
-                        <td><span class="badge bg-success">Completed</span></td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <div style="overflow-x:auto;">
+                <table class="orders-table">
+                    <thead>
+                        <tr>
+                            <th>Order #</th>
+                            <th>Date</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.order_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% for item in order.items.all %}
+                                    {{ item.medicine.name }} (x{{ item.quantity }}){% if not forloop.last %}<br>{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>₹{{ order.final_amount }}</td>
+                            <td><span class="badge bg-success">Completed</span></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <div class="no-orders">
                 <h4>No orders yet</h4>
