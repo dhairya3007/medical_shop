@@ -54,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'medical_shop.urls'
 from pathlib import Path
@@ -134,6 +135,8 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # Production static files (collectstatic will copy here)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
 
 # Media files (user uploads)
 MEDIA_URL = '/media/'
