@@ -392,10 +392,18 @@ document.querySelectorAll('.quantity-input').forEach(input => {
     input.addEventListener('input', function() {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            this.form.submit();
-        }, 700); // wait 700ms after user stops typing before submitting
+            let value = this.value.trim();
+            // Check if value is a valid positive number
+            if (isNaN(value) || value === '' || Number(value) <= 0) {
+                alert('Enter valid quantity');
+                this.focus();
+            } else {
+                this.form.submit();
+            }
+        }, 1500); // wait 7ms after user stops typing before submitting
     });
 });
+
 </script>
 
 {% endblock %}

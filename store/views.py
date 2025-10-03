@@ -137,7 +137,12 @@ def update_cart(request, medicine_id):
         medicine_id_str = str(medicine_id)
         
         if medicine_id_str in cart:
-            quantity = int(request.POST.get('quantity', 1))
+            quantity_str = request.POST.get('quantity', '').strip()
+            if not quantity_str.isdigit():
+                messages.error(request, 'Enter a valid quantity.')
+                return redirect('cart_view')
+            
+            quantity = int(quantity_str)
             medicine = get_object_or_404(Medicine, id=medicine_id)
             
             if quantity <= 0:
@@ -152,6 +157,7 @@ def update_cart(request, medicine_id):
         save_cart(request, cart)
     
     return redirect('cart_view')
+
 
 @login_required
 def remove_from_cart(request, medicine_id):
