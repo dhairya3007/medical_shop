@@ -332,6 +332,7 @@
             margin: 0 1rem;
         }
     }
+
 </style>
 
 <!-- Compact Hero Section -->
@@ -420,6 +421,13 @@
                                 <span class="price">₹{{ medicine.price }}</span>
                                 <small class="per-unit">per unit</small>
                             </div>
+                            <form method="post" action="{% url 'add_to_cart' medicine.id %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary btn-sm view-btn" title="Add to Cart">
+                                    <i class="fas fa-cart-plus"></i>
+                                </button>
+                            </form>
+
                             <a href="/medicine/{{ medicine.id }}/" class="btn btn-primary btn-sm view-btn">
                                 View Details
                             </a>

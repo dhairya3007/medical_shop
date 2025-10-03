@@ -89,29 +89,30 @@
         gap: 0.5rem;
     }
 
-    .quantity-input {
-        width: 60px;
-        border-radius: 8px;
-        border: 2px solid var(--border-color);
-        text-align: center;
-        font-weight: 600;
-    }
-
+   .quantity-input {
+    width: 80px; /* increased from 60px */
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    text-align: center;
+    font-weight: 600;
+    font-size: 1rem; /* slightly larger font */
+}
     .quantity-input:focus {
         border-color: var(--primary-color);
         box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
     }
 
-    .action-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: 2px solid transparent;
-        transition: all 0.3s ease;
-    }
+   .action-btn {
+    width: 44px; /* increased size */
+    height: 44px; /* increased size */
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    font-size: 1.2rem; /* icon slightly larger */
+}
 
     .update-btn {
         background: linear-gradient(135deg, var(--primary-color), #3b82f6);
@@ -271,16 +272,22 @@
             height: 60px;
         }
         
-        .quantity-controls {
-            flex-direction: column;
-            gap: 0.75rem;
-            align-items: stretch;
-        }
-        
-        .action-btn {
-            width: 100%;
-            height: 40px;
-        }
+        .quantity-input {
+        width: 100%; /* full width on small screens */
+        font-size: 1.1rem;
+    }
+
+    .action-btn {
+        width: 100%; /* buttons full width on mobile for easier tapping */
+        height: 45px; /* slightly taller */
+        font-size: 1.2rem;
+    }
+
+    .quantity-controls {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: stretch;
+    }
         
         .summary-card {
             position: static;
@@ -314,15 +321,14 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="quantity-controls">
-                                            <form method="post" action="{% url 'update_cart' item.medicine.id %}" class="d-flex align-items-center">
+                                            <form method="post" action="{% url 'update_cart' item.medicine.id %}" class="quantity-form">
                                                 {% csrf_token %}
                                                 <input type="number" name="quantity" value="{{ item.quantity }}" 
-                                                       min="1" max="{{ item.medicine.quantity }}" 
-                                                       class="form-control quantity-input me-2">
-                                                <button type="submit" class="btn action-btn update-btn">
-                                                    <i class="fas fa-sync"></i>
-                                                </button>
+                                                    min="1" max="{{ item.medicine.quantity }}" 
+                                                    class="form-control quantity-input" 
+                                                    onchange="this.form.submit()">
                                             </form>
+
                                             <form method="post" action="{% url 'remove_from_cart' item.medicine.id %}">
                                                 {% csrf_token %}
                                                 <button type="submit" class="btn action-btn delete-btn">
@@ -380,4 +386,16 @@
         {% endif %}
     </div>
 </div>
+<script>
+document.querySelectorAll('.quantity-input').forEach(input => {
+    let timeout = null;
+    input.addEventListener('input', function() {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            this.form.submit();
+        }, 700); // wait 700ms after user stops typing before submitting
+    });
+});
+</script>
+
 {% endblock %}
