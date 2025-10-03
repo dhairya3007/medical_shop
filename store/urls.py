@@ -16,10 +16,9 @@ urlpatterns = [
     path('cart/remove/<int:medicine_id>/', views.remove_from_cart, name='remove_from_cart'),
     path('checkout/', views.checkout_view, name='checkout'),
     path('order/success/<int:order_id>/', views.order_success, name='order_success'),
-    path('admin/add-product/', views.add_product, name='add_product'),
+    # Protect the add_product view so only staff users access it
     path('admin/add-product/', staff_member_required(add_product), name='add_product'),
     path('api/medicine/', views.api_add_medicine, name='api_add_medicine'),
     path('api/medicine/<int:medicine_id>/', views.api_update_medicine, name='api_update_medicine'),
     path('api/medicine/<int:medicine_id>/delete/', views.api_delete_medicine, name='api_delete_medicine'),
-    path('medicine/<int:medicine_id>/', views.medicine_detail, name='medicine_detail'),
-]   
+]
