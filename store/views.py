@@ -62,6 +62,17 @@ def logout_view(request):
 @login_required
 def profile_view(request):
     orders = Order.objects.filter(user=request.user, is_completed=True).order_by('-order_date')
+
+    if request.method == 'POST':
+        new_email = request.POST.get('email')
+        if new_email:
+            request.user.email = new_email
+            request.user.save()
+            messages.success(request, 'Email updated successfully.')
+            return redirect('profile')
+        else:
+            messages.error(request, 'Please provide a valid email address.')
+
     return render(request, 'profile.html', {'orders': orders})
 
 def get_cart(request):
